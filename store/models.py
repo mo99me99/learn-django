@@ -14,7 +14,7 @@ class Collection(models.Model):
 class Product(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    price = models.DecimalField(max_digits=9,decimal_places=3)
+    unit_price = models.DecimalField(max_digits=9,decimal_places=3)
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
 
