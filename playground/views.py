@@ -7,11 +7,11 @@ from store.models import Product,Customer,Collection,Order,OrderItem
 
 # Create your views here.
 def say_hello(request):
+    # be careful using .only method. if u render product.unit_price for example, you'll have lots of query to the db
+    # but using .values method, we don't have this problem. because .values method uses dic
+    # queryset = Product.objects.only('id','title')
 
-    # queryset = Product.objects.values('id','title','collection__title')
-    # queryset = Product.objects.values_list('id','title','collection__title')
-    ordered_prods_ids = OrderItem.objects.values('product_id').distinct() #distinct removes dublicates
-    queryset = Product.objects.filter(id__in=ordered_prods_ids).order_by('title')
-
+    # the .defer methods fetchs all info but specified arguments
+    queryset = Product.objects.defer('id')
 
     return render(request, 'hello.html', {'name' : 'Mohammad','products':list(queryset)})
