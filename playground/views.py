@@ -9,15 +9,9 @@ from store.models import Product,Customer,Collection,Order,OrderItem
 
 # Create your views here.
 def say_hello(request):
-    # usign db fucntions
-    # queryset = Customer.objects.annotate(
-    #     # CONCAT
-    #     full_name = Func(F('first_name'),Value(' '), F('last_name'), function='CONCAT')
-    # )
 
     queryset = Customer.objects.annotate(
-        # Concat
-        full_name = Concat('first_name',Value(' '), 'last_name')
+        order_count = Count('order')
     )
 
     # you can search for django db functions 
