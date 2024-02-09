@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db import transaction
+from django.db import connection
 from django.contrib.contenttypes.models import ContentType
 from store.models import Product, Collection, Cart, CartItem, Order, OrderItem
 from tags.models import TaggedItem
@@ -8,17 +8,14 @@ from tags.models import TaggedItem
 
 # Create your views here.
 def say_hello(request):
-    # other code 
-    with transaction.atomic():
-        order = Order()
-        order.customer_id=1
-        order.save()
+    
+    # use this approach only when you want to do complex queries or performance is not well using ORM
+    queryset = Product.objects.raw('select * from store_product') #exact queryset
 
-        item = OrderItem()
-        item.order = order
-        item.product_id = 1
-        item.quantity = 1
-        item.unit_price = 10
-        item.save()
+    with connection.cursor() as cursor: 
+        # cursor.execute('') #'queries'
+        cursor.callproc('get_customers', [1,2,'a'])
+     
+    
 
-    return render(request, 'hello.html', {'name' : 'Mohammad','tags':list()})
+    return render(request, 'hello.html', {'name' : 'Mohammad','result':list(queryset)})
