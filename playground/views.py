@@ -8,13 +8,11 @@ from tags.models import TaggedItem
 # Create your views here.
 def say_hello(request):
     
-    # collection = Collection.objects.get(pk=11)
-    # collection.title = 'Game'
-    # collection.featured_product = None
-    # collection.save()
+    collection = Collection(pk=11)
+    collection.delete()
 
-    Collection.objects.filter(pk=11).update(featured_product=None)
-
+    # collection.objects.filter(id__gt=5).delete()
+    
     
 
 
