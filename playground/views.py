@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.contenttypes.models import ContentType
-from store.models import Product
+from store.models import Product, Collection
 from tags.models import TaggedItem
 
 
@@ -8,10 +8,16 @@ from tags.models import TaggedItem
 # Create your views here.
 def say_hello(request):
     
-    queryset = Product.objects.all()
-    list(queryset)
-    list(queryset)
-    queryset[0]
-    
+    # first approach 
+    # collection = Collection(title='Video Game')
+    collection = Collection()
+    collection.title = 'Video Game'
+    collection.featured_product = Product(pk=1)
+    # collection.featured_product_id = 1 
+    collection.save()
 
-    return render(request, 'hello.html', {'name' : 'Mohammad','tags':list(queryset)})
+    # second approach
+    # collection = Collection.objects.create(title='Video Game', featured_product_id=1)
+
+
+    return render(request, 'hello.html', {'name' : 'Mohammad','tags':list()})
