@@ -19,6 +19,14 @@ class Collection(models.Model):
     featured_product = models.ForeignKey('Product', on_delete=models.SET_NULL, null=True, related_name='+' )
 
 class Product(models.Model):
+
+    def __str__(self) -> str:
+        return self.title
+    
+
+    class Meta:
+        ordering = ['title']
+
     title = models.CharField(max_length=255)
     slug = models.SlugField()
     description = models.TextField()
