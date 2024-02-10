@@ -38,6 +38,13 @@ class Product(models.Model):
     promotions = models.ManyToManyField(Promotion)
 
 class Customer(models.Model):
+
+    def __str__(self) -> str:
+        return f'{self.first_name}  {self.last_name}'
+    
+    class Meta:
+        ordering = ['first_name', 'last_name']
+
     MEMBERSHIP_BRONZE = 'B'
     MEMBERSHIP_SILVER = 'S'
     MEMBERSHIP_GOLD = 'G'
@@ -55,6 +62,11 @@ class Customer(models.Model):
     membership = models.CharField(max_length=1, choices=MEMBERSHIP_CHOISES)
 
 class Order(models.Model):
+
+    def __str__(self) -> str:
+        return str(self.pk)
+    
+
     PAYMENT_STATUS_PENDING = 'P'
     PAYMENT_STATUS_COMPLETE = 'C'
     PAYMENT_STATUS_FAILED = 'F'
