@@ -1,4 +1,8 @@
+from typing import Any
 from django.contrib import admin
+from django.db.models import Count
+from django.db.models.query import QuerySet
+from django.http import HttpRequest
 from . import models
 
 # customize admin model of a class 
@@ -39,7 +43,16 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(models.Collection)
+@admin.register(models.Collection)
+class CollectionAdmin(admin.ModelAdmin):
+    list_display = ['title', 'products_count']
+
+    @admin.display(ordering='products_count')
+    def products_count(self, collection):
+        return collection.products_count
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet[Any]:
+        return super().get_queryset(request).annotate(products_count=Count('product'))
 
 # admin.site.register(models.Product)
 # admin.site.register(models.Product, ProductAdmin)
