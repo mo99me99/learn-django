@@ -24,8 +24,8 @@ class Product(models.Model):
         return self.title
     
 
-    class Meta:
-        ordering = ['title']
+    # class Meta:
+    #     ordering = ['title']
 
     title = models.CharField(max_length=255)
     slug = models.SlugField()
