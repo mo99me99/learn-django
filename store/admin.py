@@ -27,6 +27,7 @@ class InventoryFilter(admin.SimpleListFilter):
 
 
 
+
 class TagInline(GenericTabularInline):
     model = TaggedItem
     min_num =0
