@@ -1,7 +1,7 @@
 from typing import Any
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db.models import Count
 from django.db.models.query import QuerySet
 from django.http import HttpRequest
@@ -25,7 +25,8 @@ class InventoryFilter(admin.SimpleListFilter):
 # customize admin model of a class 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['title', 'unit_price','inventory_status', 'collection_title']
+    actions = ['clear_inventory']
+    list_display = ['title', 'unit_price','inventory','inventory_status', 'collection_title']
     list_editable = ['unit_price']
     list_per_page = 20
     list_filter = ['collection','last_update', InventoryFilter]
@@ -42,7 +43,15 @@ class ProductAdmin(admin.ModelAdmin):
     
     def collection_title(self, product):
         return product.collection.title
-
+    
+    @admin.action(description='Clear Inventory')
+    def clear_inventory(self, request, queryset):
+        updated_count = queryset.update(inventory=0)
+        self.message_user(
+            request,
+            f'{updated_count} products were successfully updated.',
+            message=messages.SUCCESS
+        )
 
 
 @admin.register(models.Customer)
