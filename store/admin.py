@@ -7,13 +7,29 @@ from django.db.models.query import QuerySet
 from django.http import HttpRequest
 from . import models
 
+
+
+class InventoryFilter(admin.SimpleListFilter):
+    title = 'Inventory'
+    parameter_name = 'inventory'
+    def lookups(self, request: Any, model_admin: Any) -> list[tuple[Any, str]]:
+        return [
+            ('<10', 'Low')
+        ]
+    
+    def queryset(self, request: Any, queryset: QuerySet[Any]) -> QuerySet[Any] | None:
+        if self.value() == '<10':
+            return queryset.filter(inventory__lt=10)
+        
+
 # customize admin model of a class 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', 'unit_price','inventory_status', 'collection_title']
     list_editable = ['unit_price']
     list_per_page = 20
-    list_filter = ['collection__id']
+    list_filter = ['collection','last_update', InventoryFilter]
+    search_fields = ['title__istartswith']
 
     # like select related in queries
     list_select_related = ['collection']
@@ -64,6 +80,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ['title', 'products_count']
+    search_fields = ['title__istartswith']
 
     @admin.display(ordering='products_count')
     def products_count(self, collection): 
