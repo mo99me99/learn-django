@@ -22,6 +22,9 @@ class InventoryFilter(admin.SimpleListFilter):
             return queryset.filter(inventory__lt=10)
         
 
+
+
+
 # customize admin model of a class 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -84,9 +87,20 @@ class CustomerAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(orders_count=Count('order'))
 
 
+
+# class OrderItemInline (StackedInline)
+class OrderItemInline(admin.TabularInline):
+    model = models.OrderItem
+    min_num =1
+    max_num = 10
+    autocomplete_fields = ['product']
+    extra = 0
+    
+    
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ['customer']
+    inlines = [OrderItemInline]
     list_display = ['pk','customer','payment_status','placed_at']
     ordering = ['placed_at']
     list_filter = ['customer__id']
