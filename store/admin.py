@@ -25,6 +25,14 @@ class InventoryFilter(admin.SimpleListFilter):
 # customize admin model of a class 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    # fields = ['title', 'slug']
+    # exclude  = ['title', 'slug']
+    # readonly_fields = ['slug']
+    autocomplete_fields = ['collection']
+    prepopulated_fields = {
+        'slug' :['title']
+    }
+
     actions = ['clear_inventory']
     list_display = ['title', 'unit_price','inventory','inventory_status', 'collection_title']
     list_editable = ['unit_price']
@@ -78,6 +86,7 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['customer']
     list_display = ['pk','customer','payment_status','placed_at']
     ordering = ['placed_at']
     list_filter = ['customer__id']
@@ -89,6 +98,7 @@ class OrderAdmin(admin.ModelAdmin):
 # Register your models here.
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['featured_product']
     list_display = ['title', 'products_count']
     search_fields = ['title__istartswith']
 
