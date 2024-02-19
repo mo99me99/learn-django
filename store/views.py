@@ -7,25 +7,19 @@ from rest_framework import status
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from .models import Collection, Product
 from .serializers import CollectionSerializer, ProductSerializer
 
 
 # Create your views here.
-
-
-class ProductList(ListCreateAPIView):
+class ProductViewSet(ModelViewSet):
     queryset = Product.objects.select_related('collection').all()
     serializer_class = ProductSerializer
-    
+
     def get_serializer_context(self):
         return {'request', self.request}
-    
 
-class ProductDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    
     def delete(self, request, pk):
         product:Product = get_object_or_404(Product, pk=pk)
         if product.orderitem_set.count() > 0 :
@@ -39,17 +33,10 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
 
 
 
-class CollectionList(ListCreateAPIView):
+class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(products_count=Count('product')).all()
     serializer_class = CollectionSerializer
     
-
-
-
-class CollectionDetail(RetrieveUpdateDestroyAPIView):
-    queryset = Collection.objects.annotate(products_count=Count('product')).all()
-    serializer_class = CollectionSerializer
-
 
     def delete(self, request, pk):
         collection = get_object_or_404(Collection, pk=pk)
