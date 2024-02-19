@@ -13,7 +13,7 @@ from .serializers import CollectionSerializer, ProductSerializer
 
 
 # Create your views here.
-class ProductViewSet(ModelViewSet):
+class ProductViewSet(ReadOnlyModelViewSet):
     queryset = Product.objects.select_related('collection').all()
     serializer_class = ProductSerializer
 
@@ -33,7 +33,7 @@ class ProductViewSet(ModelViewSet):
 
 
 
-class CollectionViewSet(ModelViewSet):
+class CollectionViewSet(ReadOnlyModelViewSet):
     queryset = Collection.objects.annotate(products_count=Count('product')).all()
     serializer_class = CollectionSerializer
     
