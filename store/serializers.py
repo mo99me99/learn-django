@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from decimal import Decimal
 
-from store.models import Product, Collection
+from .models import Product, Collection, Review
 
 
 class CollectionSerializer(serializers.ModelSerializer):
@@ -29,3 +29,8 @@ class ProductSerializer(serializers.ModelSerializer):
         return product.unit_price * Decimal(1.1)
     
     # create and update methods are available and could be override
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    model = Review
+    fields = ['id','date','name','description','product']
