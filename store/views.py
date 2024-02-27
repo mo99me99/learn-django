@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
-
 from .pagination import DefaultPagination
 from .filters import ProductFilter
 from .models import Collection, OrderItem, Product, Review
