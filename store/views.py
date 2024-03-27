@@ -10,8 +10,8 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet, ReadOnlyModelV
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyModelMixin, ListModelMixin
 from .pagination import DefaultPagination
 from .filters import ProductFilter
-from .models import Collection, OrderItem, Product, Review, Cart
-from .serializers import CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
+from .models import CartItem, Collection, OrderItem, Product, Review, Cart
+from .serializers import CartItemSerializer, CartSerializer, CollectionSerializer, ProductSerializer, ReviewSerializer
 
 
 # Create your views here.
@@ -71,3 +71,11 @@ class ReviewViewSet(ModelViewSet):
 class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericViewSet):
     queryset = Cart.objects.prefetch_related('cartitem_set__product').all()
     serializer_class = CartSerializer
+
+
+class CartItemViewSet(ModelViewSet):
+
+    def get_queryset(self):
+        return CartItem.objects.select_related('product').filter(cart_id=self.kwargs['cart_pk'])
+    
+    serializer_class = CartItemSerializer

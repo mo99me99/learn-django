@@ -12,9 +12,11 @@ router.register('carts', views.CartViewSet, basename='carts')
 products_router = routers.NestedDefaultRouter(router, 'products', lookup='product')
 products_router.register('reviews', views.ReviewViewSet, basename='product-reviews')
 
+carts_router = routers.NestedDefaultRouter(router, 'carts', lookup='cart')
+carts_router.register('items', views.CartItemViewSet, basename='cart-items')
 
 # URL configuration
-urlpatterns = router.urls + products_router.urls
+urlpatterns = router.urls + products_router.urls + carts_router.urls
 
 # urlpatterns = [
     # path('',include(router.urls)) #using this approach you can add other specefic aptterns you wnat and still use router.urls
