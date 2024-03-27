@@ -74,6 +74,7 @@ class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericV
 
 
 class CartItemViewSet(ModelViewSet):
+    # method names should be in lowercase
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
