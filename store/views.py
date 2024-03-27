@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, ReadOnlyModelViewSet
-from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, ListModelMixin
+from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyModelMixin, ListModelMixin
 from .pagination import DefaultPagination
 from .filters import ProductFilter
 from .models import Collection, OrderItem, Product, Review, Cart
@@ -68,6 +68,6 @@ class ReviewViewSet(ModelViewSet):
     
 
 
-class CartViewSet(CreateModelMixin,RetrieveModelMixin,GenericViewSet):
+class CartViewSet(CreateModelMixin,RetrieveModelMixin,DestroyModelMixin,GenericViewSet):
     queryset = Cart.objects.prefetch_related('cartitem_set__product').all()
     serializer_class = CartSerializer
