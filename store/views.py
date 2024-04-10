@@ -4,13 +4,13 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, AllowAny,IsAdminUser, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated, AllowAny,IsAdminUser, DjangoModelPermissions, SAFE_METHODS
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, ReadOnlyModelViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyModelMixin,UpdateModelMixin, ListModelMixin
 
-from .permissions import IsAdminOrReadOnly
+from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .pagination import DefaultPagination
 from .filters import ProductFilter
 from .models import CartItem, Collection, Customer, OrderItem, Product, Review, Cart
@@ -101,7 +101,8 @@ class CustomerViewSet(ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminUser]
+
 
     @action(detail=False, methods=['get', 'put'], permission_classes=[IsAuthenticated] )
     def me(self, request):
@@ -117,3 +118,9 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+
+    @action(detail=True, methods=SAFE_METHODS, permission_classes=[AllowAny])
+    def profile(self, request, *args, **kwargs):
+        customer = get_object_or_404(Customer,pk=kwargs['pk'])
+        serializer = CustomerSerializer(customer)
+        return Response(serializer.data)
