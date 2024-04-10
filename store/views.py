@@ -13,8 +13,8 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyMo
 from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .pagination import DefaultPagination
 from .filters import ProductFilter
-from .models import CartItem, Collection, Customer, OrderItem, Product, Review, Cart
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .models import CartItem, Collection, Customer, OrderItem, Product, Review, Cart, Order
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
 
 
 # Create your views here.
@@ -124,3 +124,8 @@ class CustomerViewSet(ModelViewSet):
         customer = get_object_or_404(Customer,pk=kwargs['pk'])
         serializer = CustomerSerializer(customer)
         return Response(serializer.data)
+    
+
+class OrderViewSet(GenericViewSet, ListModelMixin):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
