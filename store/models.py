@@ -111,7 +111,7 @@ class Order(models.Model):
         (PAYMENT_STATUS_FAILED, 'Failed')
     ]
     placed_at = models.DateTimeField(auto_now_add=True)
-    payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOISES)
+    payment_status = models.CharField(max_length=1, choices=PAYMENT_STATUS_CHOISES, default=PAYMENT_STATUS_PENDING)
 
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
 
