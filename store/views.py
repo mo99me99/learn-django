@@ -128,7 +128,6 @@ class CustomerViewSet(ModelViewSet):
 
 class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
-    # queryset = Order.objects.all()
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
