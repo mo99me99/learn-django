@@ -1,3 +1,4 @@
 /.venv
 /playground/__pycache__
 jwt.txt
+/media
