@@ -14,7 +14,11 @@ from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .pagination import DefaultPagination
 from .filters import ProductFilter
 from .models import CartItem, Collection, Customer, OrderItem, Product, Review, Cart, Order
-from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer, CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductSerializer, ReviewSerializer, UpdateCartItemSerializer
+from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer,\
+            CreateOrderSerializer, CustomerSerializer, OrderSerializer,\
+            ProductSerializer, ReviewSerializer, UpdateCartItemSerializer,\
+            UpdateOrderSerializer
+            
 
 
 # Create your views here.
@@ -140,6 +144,8 @@ class OrderViewSet(ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == 'POST' : 
             return CreateOrderSerializer
+        if self.request.method == 'PATCH':
+            return UpdateOrderSerializer
         return OrderSerializer
     
     def get_permissions(self):
