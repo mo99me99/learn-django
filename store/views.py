@@ -13,9 +13,9 @@ from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin,DestroyMo
 from .permissions import IsAdminOrReadOnly, ViewCustomerHistoryPermission
 from .pagination import DefaultPagination
 from .filters import ProductFilter
-from .models import CartItem, Collection, Customer, OrderItem, Product, Review, Cart, Order
+from .models import CartItem, Collection, Customer, OrderItem, Product, ProductImage, Review, Cart, Order
 from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializer, CollectionSerializer,\
-            CreateOrderSerializer, CustomerSerializer, OrderSerializer,\
+            CreateOrderSerializer, CustomerSerializer, OrderSerializer, ProductImageSerializer,\
             ProductSerializer, ReviewSerializer, UpdateCartItemSerializer,\
             UpdateOrderSerializer
             
@@ -46,7 +46,15 @@ class ProductViewSet(ModelViewSet):
         return super().destroy(request, *args, **kwargs)
     
 
-
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+    
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs['product_pk'])
+    
+    def get_serializer_context(self):
+        return {'product_id':self.kwargs['product_pk']}
+    
 
 class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(products_count=Count('product')).all()

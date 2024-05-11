@@ -52,7 +52,9 @@ class Product(models.Model):
     collection = models.ForeignKey(Collection, on_delete=models.PROTECT )
     promotions = models.ManyToManyField(Promotion, blank=True)
 
-
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='store/images')
 
 
 
