@@ -24,23 +24,28 @@ class InventoryFilter(admin.SimpleListFilter):
 
 
 
+class ProductImageInline(admin.TabularInline):
+    model = models.ProductImage
+    readonly_fields = ['thumbnail']
 
+    def thumbnail(self, instance):
+        if instance.image.name is not '':
+            return format_html(f'<img src="{instance.image.url}" class="thumbnail" />')
+        return ''
 
 
 
 # customize admin model of a class 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    # fields = ['title', 'slug']
-    # exclude  = ['title', 'slug']
-    # readonly_fields = ['slug']
     autocomplete_fields = ['collection']
     prepopulated_fields = {
         'slug' :['title']
     }
 
     actions = ['clear_inventory']
-    list_display = ['title', 'unit_price','inventory','inventory_status', 'collection_title']
+    inlines = [ProductImageInline]
+    list_display = ['id', 'title', 'unit_price','inventory','inventory_status', 'collection_title']
     list_editable = ['unit_price']
     list_per_page = 20
     list_filter = ['collection','last_update', InventoryFilter]
@@ -66,6 +71,11 @@ class ProductAdmin(admin.ModelAdmin):
             f'{updated_count} products were successfully updated.',
             message=messages.SUCCESS
         )
+    
+    class Media:
+        css = {
+            'all':['store/styles.css']
+        }
 
 
 @admin.register(models.Customer)
