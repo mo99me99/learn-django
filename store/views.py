@@ -23,27 +23,24 @@ from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializ
 
 # Create your views here.
 class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.select_related('collection').all()
+    queryset = Product.objects.prefetch_related('images').all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
     pagination_class = DefaultPagination
+    permission_classes = [IsAdminOrReadOnly]
     search_fields = ['title', 'description']
     ordering_fields = ['unit_price', 'last_update']
-    permission_classes = [IsAdminOrReadOnly]
-
-
 
     def get_serializer_context(self):
-        return {'request', self.request}
-    
+        return {'request': self.request}
+
     def destroy(self, request, *args, **kwargs):
-        product:Product = get_object_or_404(Product, pk=kwargs['pk'])
-        if product.orderitem_set.count() > 0 :
-            return Response({'error':'product can not be deleted because it is associated with an order item'}
-                            ,status=status.HTTP_405_METHOD_NOT_ALLOWED
-                    )
+        if OrderItem.objects.filter(product_id=kwargs['pk']).count() > 0:
+            return Response({'error': 'Product cannot be deleted because it is associated with an order item.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
         return super().destroy(request, *args, **kwargs)
+
     
 
 class ProductImageViewSet(ModelViewSet):

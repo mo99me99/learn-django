@@ -15,33 +15,36 @@ class CollectionSerializer(serializers.ModelSerializer):
     products_count = serializers.IntegerField(read_only=True)
 
 
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id', 'title','slug','inventory', 'unit_price','description','collection','collection_title','price_with_tax']
-        # fields = '__all__' #bad practice
-
-    price_with_tax = serializers.SerializerMethodField(method_name='calculate_tax')
-    collection_title = serializers.SerializerMethodField(method_name='get_collection_title')
-
-    def get_collection_title(self, product:Product):
-        return product.collection.title
-
-    def calculate_tax(self, product : Product):
-        return product.unit_price * Decimal(1.1)
-    
-    # create and update methods are available and could be override
-
-
 class ProductImageSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        product_id = self.context['product_id']
+        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
     class Meta:
         model = ProductImage
         fields = ['id', 'image']
-    
-    def create(self,  validated_data):
-        product_id = self.context['product_id']
-        return ProductImage.objects.create(product_id=product_id, **validated_data)
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ['id', 'title', 'description', 'slug', 'inventory',
+                  'unit_price', 'price_with_tax', 'collection', 'images']
+
+    price_with_tax = serializers.SerializerMethodField(
+        method_name='calculate_tax')
+
+    def calculate_tax(self, product: Product):
+        return product.unit_price * Decimal(1.1)
+
+    # images = serializers.SerializerMethodField(method_name='get_temp')
+    # def get_temp(self, product):
+    #     return 'temp'
+    # create and update methods are available and could be override
+
+
 
 
 class ReviewSerializer(serializers.ModelSerializer):
