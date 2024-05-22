@@ -182,5 +182,9 @@ EMAIL_HOST_PASSWORD =  ''
 EMAIL_PORT = 2525
 DEFAULT_FROM_EMAIL = 'from@mobuy.com'
 
+ADMINS = [
+    ('Mohammad', 'm.m.hosseini1099@gmail.com')
+]
+
 
 AUTH_USER_MODEL = 'core.User'
