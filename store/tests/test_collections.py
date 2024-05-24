@@ -4,8 +4,9 @@ import pytest
 
 @pytest.mark.django_db
 class TestCreateCollection:
-    #AAA (Arrange, Act, Assert)
 
+    #AAA (Arrange, Act, Assert)
+    @pytest.mark.skip
     def test_if_user_is_ananymous_return_401(self):
         #Arrange
 

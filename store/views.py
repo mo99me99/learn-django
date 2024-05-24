@@ -57,7 +57,7 @@ class CollectionViewSet(ModelViewSet):
     queryset = Collection.objects.annotate(products_count=Count('product')).all()
     serializer_class = CollectionSerializer
 
-    permission_classes = [IsAdminOrReadOnly]
+    # permission_classes = [IsAdminOrReadOnly]
 
 
     def destroy(self, request, *args, **kwargs):
