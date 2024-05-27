@@ -62,6 +62,7 @@ wcwidth = "==0.2.13"
 [dev-packages]
 pytest-django = "*"
 pytest = "*"
+pytest-watch = "*"
 
 [requires]
 python_version = "3.11"
