@@ -6,17 +6,20 @@ class WebsiteUser(HttpUser):
     #viewing products
     @task(2)
     def view_products(self):
+        print('view products')
         collection_id = randint(2,6)
-        self.client.get(f'/store/products/?collection_id={collection_id}/', name='/store/products/')
+        self.client.get(f'/store/products/?collection_id={collection_id}', name='/store/products')
 
     #viwing a product
     @task(4)
-    def view_poduct(self):
-        product = randint(1,1000)
-        self.client.get(f'/store/products/{product.id}', name='/store/prodcuts/:id')
+    def view_product(self):
+        print('view product details')
+        product_id = randint(1,1000)
+        self.client.get(f'/store/products/{product_id}', name='/store/prodcuts/:id')
 
     @task(1)
     def add_to_cart(self):
+        print('add to cart')
         product_id = randint(1,10)
         self.client.post(f'/store/carts/{self.cart_id}/items/',
                         name='/store/carts/items',
